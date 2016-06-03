@@ -1,0 +1,5 @@
+__author__ = 'bworrell'
+
+DEFAULT_MIN_SLEEP = 1
+DEFAULT_MAX_SLEEP = 5
+DEFAULT_CHANCE    = 10
