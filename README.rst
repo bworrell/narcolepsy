@@ -15,6 +15,7 @@ Usage
 -----
 
 The following code is an example of using the ``@narcoleptic`` decorator.
+
 ::
 
     from narcolepsy import narcoleptic
@@ -30,6 +31,7 @@ Installation
 The easiest way to install ``narcolepsy`` is via ``pip``:
 
 ::
+
     $ pip install narcolepsy
 
 
