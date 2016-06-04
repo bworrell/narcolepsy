@@ -80,12 +80,10 @@ class narcoleptic(object):
             A wrapped function. Any parameters will be passed to the input
             function.
         """
-        tracer = self._tracer_instance(func)
-
         @functools.wraps(func)
         def inner(*args, **kwargs):
             old = sys.gettrace()
-            sys.settrace(tracer)
+            sys.settrace(self._tracer_instance(func))
 
             try:
                 val = func(*args, **kwargs)
