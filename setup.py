@@ -35,7 +35,7 @@ setuptools.setup(
     name='narcolepsy',
     description="Give your application a break.",
     author='Bryan Worrell',
-    author_email='',
+    author_email='bworrell@notmyemail.com',
     url='https://github.com/bworrell',
     version=get_version(),
     packages=setuptools.find_packages(),
