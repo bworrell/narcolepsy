@@ -1,18 +1,20 @@
+# Copyright (c) 2016 - Bryan Worrell
+# For license information, see the LICENSE file
 """
 Line tracers.
 """
+
+from __future__ import absolute_import
+
 import logging
-import itertools
+import inspect
 import random
-import time
+import itertools
 
-LOG = logging.getLogger(__name__)
+from . import utils
 
 
-def randsleep(min, max):
-    interval = random.randint(min, max)
-    LOG.debug("Sleeping for %s seconds", interval)
-    time.sleep(interval)
+logger = logging.getLogger(__name__)
 
 
 class RandomSleepTracer(object):
@@ -20,27 +22,30 @@ class RandomSleepTracer(object):
         self._min = min
         self._max = max
         self._chance = chance
-        self._sleep = random.randint(0, chance)
-        self._count = itertools.count()
-        self._is_first_call = True
+        self._sleep_on = random.randint(0, chance)
+        self._sleep_count = itertools.count()
+        self._descend = True
+
+    def _reset_sleep_counts(self):
+        self._sleep_on = random.randint(0, self._chance)
+        self._sleep_count = itertools.count()
+
+    def _go_to_sleep(self):
+        utils.randsleep(self._min, self._max)
 
     def _try_sleep(self):
-        count = next(self._count)
-
-        if count != self._sleep:
-            return
-
-        # randsleep(self._min, self._max)
-        self._sleep = random.randint(0, self._chance)
-        self._count = itertools.count()
+        if next(self._sleep_count) == self._sleep_on:
+            self._go_to_sleep()
+            self._reset_sleep_counts()
 
     def __call__(self, frame, event, args):
-        LOG.debug("%s %s:%s", event, frame.f_code.co_filename, frame.f_lineno)
+        logger.debug("event: %s,  %s", event, inspect.getframeinfo(frame))
+
         if event == "line":
             self._try_sleep()
             return self
-        elif event == "call" and self._is_first_call:
-            self._is_first_call = False
+        elif event == "call" and self._descend:
+            self._descend = False
             return self
         return None
 
