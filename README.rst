@@ -3,6 +3,12 @@ narcolepsy
 
 Sleep soundly. Sleep randomly.
 
+|pypi badge| |downloads badge|
+
+.. |pypi badge| image:: https://img.shields.io/pypi/v/narcolepsy.svg?maxAge=3600
+   :target: https://pypi.python.org/pypi/narcolepsy/
+.. |downloads badge| image:: https://img.shields.io/pypi/dm/narcolepsy.svg?maxAge=3600
+   :target: https://pypi.python.org/pypi/narcolepsy/
 
 Overview
 --------
