@@ -6,8 +6,12 @@ Not really unit tests. Just smoke testing.
 import time
 import logging
 import unittest
+import threading
 
 from narcolepsy import narcoleptic
+
+
+LOG = logging.getLogger(__name__)
 
 
 class DecoratorTests(unittest.TestCase):
@@ -22,7 +26,30 @@ class DecoratorTests(unittest.TestCase):
         duration = time.time() - start
         self.assertTrue(duration > 0.1)
 
+    def test_multithread(self):
+        """Testing that this can be used in multithreaded applications."""
+        @narcoleptic(min=0.5, max=1.0, chance=1)
+        def worker():
+            LOG.debug("In thread...")
+            a = 1
+            b = 2
+
+        threads = (
+            threading.Thread(target=worker),
+            threading.Thread(target=worker)
+        )
+
+        start = time.time()
+        for thread in threads:
+           thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        duration = time.time() - start
+        self.assertTrue(duration > 0.4)
+
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format="[%(thread)d] %(message)s")
     unittest.main()
