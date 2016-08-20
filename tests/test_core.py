@@ -13,7 +13,14 @@ logging.basicConfig(level="DEBUG")
 logger = logging.getLogger(__name__)
 
 
-@narcoleptic(max=3, chance=1)
+def bar():
+    print "In bar()"
+    print "This shouldn't sleep!"
+    print "This"
+    print "shouldn't"
+    print "sleep!"
+
+@narcoleptic(max=1, chance=1)
 def foo():
     a = 1
     print a
@@ -21,16 +28,23 @@ def foo():
     b = 2
     print b
 
+    bar()
+
     c = 3
     print c
 
     d = 4
     print d
 
+    bar()
+
 
 def main():
     print "Running foo() with chance=1"
     foo()
+
+
+
 
 
 if __name__ == "__main__":

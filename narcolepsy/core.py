@@ -3,9 +3,7 @@
 
 from __future__ import absolute_import
 
-import sys
 import functools
-import contextlib
 
 from . import utils
 from . import tracers
@@ -50,22 +48,6 @@ class narcoleptic(object):
         self._max = max or constants.DEFAULT_MAX_SLEEP
         self._chance = chance
 
-    def _tracer_instance(self, func):
-        """Return a RandomSleepTracer object instance.
-
-        Args:
-            func (function): Used to derive a `chance` parameter from the
-                number of lines in the function.
-
-        Returns:
-            A `tracer.RandomSleepTracer` object.
-        """
-        return tracers.RandomSleepTracer(
-            min=self._min,
-            max=self._max,
-            chance=self._chance or _chance(func)
-        )
-
     def __call__(self, func):
         """Return a wrapped function which injects a tracer before and after
         execution of the input function.
@@ -82,28 +64,13 @@ class narcoleptic(object):
         """
         @functools.wraps(func)
         def inner(*args, **kwargs):
-            old = sys.gettrace()
-            sys.settrace(self._tracer_instance(func))
+            tracer = tracers.RandomSleepTracer(
+                min=self._min,
+                max=self._max,
+                chance=self._chance or _chance(func)
+            )
 
-            try:
-                val = func(*args, **kwargs)
-            finally:
-                sys.settrace(old)
-            return val
+            with contexts.injected(tracer):
+                return func(*args, **kwargs)
 
         return inner
-
-
-@contextlib.contextmanager
-def narcoleptic_ctx(min=None, max=None, chance=None):
-    """A context manager that injects random sleep calls into the execution
-    context. **THIS DOES NOT WORK.**
-    """
-    tracer = tracers.RandomSleepTracer(
-        min=min or constants.DEFAULT_MIN_SLEEP,
-        max=max or constants.DEFAULT_MAX_SLEEP,
-        chance=chance or constants.DEFAULT_CHANCE
-    )
-
-    with contexts.injected(tracer):
-        yield

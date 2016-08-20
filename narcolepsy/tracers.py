@@ -64,7 +64,7 @@ class RandomSleepTracer(object):
             the line tracer. This means it accepts the call to the wrapped
             function but no other internal function calls.
         """
-        logger.debug("event: %s,  %s", event, inspect.getframeinfo(frame))
+        logger.debug("Event: %s,  %s", event, inspect.getframeinfo(frame))
 
         if event == "line":
             self._try_sleep()
