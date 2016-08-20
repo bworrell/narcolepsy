@@ -50,10 +50,8 @@ The easiest way to install ``narcolepsy`` is via ``pip``:
 Why?
 ----
 
-Just for funsies.There are probably testing applications that I haven't
-considered where timing is an integral component to the execution environment. 
-Or you could use this to make sneaking by CAPTCHAs a bit easier :D
-
+Playing around with line tracers. In theory this could help test time-critical
+code (multi-producer/consumer concurrent applications).
 
 LICENSE
 -------
