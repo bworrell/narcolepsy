@@ -21,8 +21,8 @@ class RandomSleepTracer(object):
     """Line tracer that injects sleep() calls.
 
     Args:
-        min (int): The minimum amount of time to sleep.
-        max (int): The maximum amount of time to sleep.
+        min (float): The minimum amount of time to sleep.
+        max (float): The maximum amount of time to sleep.
         chance (int): Execute a sleep **AT LEAST** once every N lines of code.
     """
 

@@ -37,8 +37,8 @@ class narcoleptic(object):
         decorated function will change in behavior.
 
     Args:
-        min (int): The minimum sleep time in seconds.
-        max (int): The maximum sleep tim in seconds.
+        min (float): The minimum sleep time in seconds.
+        max (float): The maximum sleep tim in seconds.
         chance (int): A sleep call will be executed **AT LEAST** once every
             N (chance) lines.
     """

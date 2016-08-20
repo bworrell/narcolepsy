@@ -3,7 +3,6 @@
 """
 Utility functions.
 """
-
 from __future__ import absolute_import
 
 import dis
@@ -11,7 +10,6 @@ import time
 import random
 import inspect
 import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -44,10 +42,11 @@ def randsleep(min, max):
     """Sleep for a number of seconds between `min` and `max`.
 
     Args:
-        min (int): The minimum number of seconds to sleep.
-        max (int): The maximum number of seconds to sleep.
+        min (float): The minimum number of seconds to sleep.
+        max (float): The maximum number of seconds to sleep.
     """
-    interval = random.randint(min, max)
+    diff = max - min
+    interval = min + (random.random() * diff)
     logger.info("Sleeping for %s seconds", interval)
     time.sleep(interval)
 
