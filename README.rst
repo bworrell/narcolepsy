@@ -53,11 +53,30 @@ The easiest way to install ``narcolepsy`` is via ``pip``:
     $ pip install narcolepsy
 
 
+Known Issues
+------------
+As mentioned in the `official documentation`_, ``sys.settrace()`` isn't part
+of the Python language definition and thus, may not be available to all
+Python implementations.
+
+.. _official documentation: https://docs.python.org/2/library/sys.html#sys.settrace
+
+
 Why?
 ----
 
-Playing around with line tracers. In theory this could help test time-critical
-code (multi-producer/consumer concurrent applications).
+In theory this could help test time-critical code (multi-producer/consumer
+concurrent applications), but I mostly just wanted to play around with line
+tracers.
+
+
+Disclaimer
+----------
+
+This is a proof of concept and probably shouldn't be used in any sort of
+real-world scenario where testing of time-critical code has any measure of
+importance. **USE AT YOUR OWN RISK!**
+
 
 LICENSE
 -------
