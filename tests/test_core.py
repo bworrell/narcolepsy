@@ -3,49 +3,26 @@
 """
 Not really unit tests. Just smoke testing.
 """
-
+import time
 import logging
+import unittest
 
 from narcolepsy import narcoleptic
 
 
-logging.basicConfig(level="DEBUG")
-logger = logging.getLogger(__name__)
+class DecoratorTests(unittest.TestCase):
+    def test_sleep(self):
+        @narcoleptic(min=0.1, max=0.2, chance=1)
+        def foo():
+            a = 1
+            b = 2
 
-
-def bar():
-    print "In bar()"
-    print "This shouldn't sleep!"
-    print "This"
-    print "shouldn't"
-    print "sleep!"
-
-@narcoleptic(max=1, chance=1)
-def foo():
-    a = 1
-    print a
-
-    b = 2
-    print b
-
-    bar()
-
-    c = 3
-    print c
-
-    d = 4
-    print d
-
-    bar()
-
-
-def main():
-    print "Running foo() with chance=1"
-    foo()
-
-
-
+        start = time.time()
+        foo()  # Normally this would take microseconds
+        duration = time.time() - start
+        self.assertTrue(duration > 0.1)
 
 
 if __name__ == "__main__":
-    main()
+    logging.basicConfig(level=logging.DEBUG)
+    unittest.main()
