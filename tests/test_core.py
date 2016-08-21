@@ -24,11 +24,11 @@ class DecoratorTests(unittest.TestCase):
         start = time.time()
         foo()  # Normally this would take microseconds
         duration = time.time() - start
-        self.assertTrue(duration > 0.1)
+        self.assertGreater(duration, 0.1)
 
     def test_multithread(self):
         """Testing that this can be used in multithreaded applications."""
-        @narcoleptic(min=0.5, max=1.0, chance=1)
+        @narcoleptic(min=0.1, max=0.2, chance=1)
         def worker():
             LOG.debug("In thread...")
             a = 1
@@ -47,9 +47,21 @@ class DecoratorTests(unittest.TestCase):
             thread.join()
 
         duration = time.time() - start
-        self.assertTrue(duration > 0.4)
+        self.assertGreater(duration,  0.1)
+
+    def test_generator(self):
+        """Verify that @narcoleptic works on a generator"""
+        @narcoleptic(min=0.1, max=0.2, chance=1)
+        def gen():
+            yield 1
+            yield 2
+            yield 3
+
+        start = time.time()
+        list(gen())
+        duration = time.time() - start
+        self.assertGreater(duration, 0.1)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, format="[%(thread)d] %(message)s")
     unittest.main()
