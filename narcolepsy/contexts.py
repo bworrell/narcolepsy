@@ -18,4 +18,3 @@ def injected(tracer):
         yield
     finally:
         sys.settrace(old)
-

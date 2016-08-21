@@ -3,32 +3,15 @@
 
 from __future__ import absolute_import
 
+import inspect
 import functools
 
-from . import utils
 from . import tracers
 from . import contexts
 from . import constants
 
 
-def _chance(func, ratio=None):
-    """Derive a naroleptic "chance" from the input function. This will be the
-    number of lines in the function multiplied by some ratio.
-
-    Args:
-        func: A function.
-        ratio (float): The ratio of maximum lines of code to sleep() calls.
-
-    Returns:
-        An integer value representing the maximum number of lines executed
-        before a sleep() call.
-    """
-    ratio = ratio or 0.25
-    val = int(ratio * utils.numlines(func))
-    return val if val > 0 else 1
-
-
-class narcoleptic(object):
+def narcoleptic(min=None, max=None, chance=None):
     """Function decorator which injects random sleep() calls into your
     function.
 
@@ -42,35 +25,23 @@ class narcoleptic(object):
         chance (int): A sleep call will be executed **AT LEAST** once every
             N (chance) lines.
     """
-
-    def __init__(self, min=None, max=None, chance=None):
-        self._min = min or constants.DEFAULT_MIN_SLEEP
-        self._max = max or constants.DEFAULT_MAX_SLEEP
-        self._chance = chance
-
-    def __call__(self, func):
-        """Return a wrapped function which injects a tracer before and after
-        execution of the input function.
-
-        Any existing tracers will be returned prior to the returned
-        function exiting.
-
-        Args:
-            func: A function.
-
-        Returns:
-            A wrapped function. Any parameters will be passed to the input
-            function.
-        """
+    def decorator(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
             tracer = tracers.RandomSleepTracer(
-                min=self._min,
-                max=self._max,
-                chance=self._chance or _chance(func)
+                min=min or constants.DEFAULT_MIN_SLEEP,
+                max=max or constants.DEFAULT_MAX_SLEEP,
+                chance=chance or constants.DEFAULT_CHANCE
             )
 
             with contexts.injected(tracer):
                 return func(*args, **kwargs)
 
         return inner
+
+    # This enables us to use the @narcoleptic decorator without parens if
+    # we want to use the default values. E.g., @narcoleptic vs @narcoleptic()
+    if inspect.isfunction(min):
+        func, min = min, constants.DEFAULT_MIN_SLEEP
+        return decorator(func)
+    return decorator
