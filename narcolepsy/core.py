@@ -41,7 +41,7 @@ def narcoleptic(min=None, max=None, chance=None):
 
     # This enables us to use the @narcoleptic decorator without parens if
     # we want to use the default values. E.g., @narcoleptic vs @narcoleptic()
-    if inspect.isfunction(min):
+    if callable(min):
         func, min = min, constants.DEFAULT_MIN_SLEEP
         return decorator(func)
     return decorator
