@@ -9,7 +9,7 @@ import unittest
 import threading
 
 from narcolepsy import narcoleptic
-from narcolepsy import constants
+from narcolepsy import sleeps_every_line
 
 
 LOG = logging.getLogger(__name__)
@@ -27,19 +27,6 @@ class DecoratorTests(unittest.TestCase):
         foo()  # Normally this would take microseconds
         duration = time.time() - start
         self.assertGreater(duration, 0.1)
-
-    def test_no_parens(self):
-        """Test that the calling @narcoleptic without parens works."""
-        @narcoleptic
-        def foo():
-            a = 1
-            b = 2
-
-        start = time.time()
-        foo()  # Normally this would take microseconds
-        duration = time.time() - start
-        self.assertGreater(duration, constants.DEFAULT_MIN_SLEEP)
-
 
     def test_multithread(self):
         """Testing that this can be used in multithreaded applications."""
@@ -74,6 +61,18 @@ class DecoratorTests(unittest.TestCase):
 
         start = time.time()
         list(gen())
+        duration = time.time() - start
+        self.assertGreater(duration, 0.1)
+
+    def test_shortcut(self):
+        """Test the core shortcuts."""
+        @sleeps_every_line
+        def worker():
+            a = 1
+            b = 2
+
+        start = time.time()
+        worker()
         duration = time.time() - start
         self.assertGreater(duration, 0.1)
 

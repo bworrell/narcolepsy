@@ -10,7 +10,7 @@ from narcolepsy import contexts
 from narcolepsy import constants
 
 
-def narcoleptic(min=None, max=None, chance=None):
+class narcoleptic(object):
     """Function decorator which injects random sleep() calls into your
     function.
 
@@ -24,13 +24,33 @@ def narcoleptic(min=None, max=None, chance=None):
         chance (int): A sleep call will be executed **AT LEAST** once every
             N (chance) lines.
     """
-    def decorator(func):
+
+    def __init__(self, min=None, max=None, chance=None):
+        self._min = min or constants.DEFAULT_MIN_SLEEP
+        self._max = max or constants.DEFAULT_MAX_SLEEP
+        self._chance = chance or constants.DEFAULT_CHANCE
+
+    def __call__(self, func):
+        """Return a wrapped function which injects a tracer before the
+        execution of the function which will cause the function to sleep
+        at define intervals.
+
+        Any existing tracers will be returned prior to the returned
+        function exiting.
+
+        Args:
+            func: A function.
+
+        Returns:
+            A wrapped function. Any parameters will be passed to the input
+            function.
+        """
         @functools.wraps(func)
         def inner(*args, **kwargs):
             tracer = tracers.RandomSleepTracer(
-                min=min or constants.DEFAULT_MIN_SLEEP,
-                max=max or constants.DEFAULT_MAX_SLEEP,
-                chance=chance or constants.DEFAULT_CHANCE
+                min=self._min,
+                max=self._max,
+                chance=self._chance
             )
 
             with contexts.injected(tracer):
@@ -38,9 +58,6 @@ def narcoleptic(min=None, max=None, chance=None):
 
         return inner
 
-    # This enables us to use the @narcoleptic decorator without parens if
-    # we want to use the default values. E.g., @narcoleptic vs @narcoleptic()
-    if callable(min):
-        func, min = min, constants.DEFAULT_MIN_SLEEP
-        return decorator(func)
-    return decorator
+
+# Shortcuts
+sleeps_every_line = narcoleptic(chance=1)
