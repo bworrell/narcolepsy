@@ -5,9 +5,9 @@ from __future__ import absolute_import
 
 import functools
 
-from . import tracers
-from . import contexts
-from . import constants
+from narcolepsy import tracers
+from narcolepsy import contexts
+from narcolepsy import constants
 
 
 def narcoleptic(min=None, max=None, chance=None):

@@ -11,7 +11,7 @@ import inspect
 import random
 import itertools
 
-from . import utils
+from narcolepsy import utils
 
 
 logger = logging.getLogger(__name__)
