@@ -73,9 +73,7 @@ tracers.
 Disclaimer
 ----------
 
-This is a proof of concept and probably shouldn't be used in any sort of
-real-world scenario where testing of time-critical code has any measure of
-importance. **USE AT YOUR OWN RISK!**
+This is a proof of concept. Use at your own risk!
 
 
 LICENSE
